@@ -28,14 +28,14 @@ const Popup = () => {
                 Latest Prompt Impact
             </p>
             <div className="text-2xl font-black text-primary-dark dark:text-primary-white">
-                0.00 <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub>2</sub></span>
+                0.00 <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub className='text-primary-green'>2</sub></span>
             </div>
             <hr className='text-primary-dark dark:text-primary-white' />
             <p className='text-sm text-primary-dark dark:text-primary-white uppercase tracking-widest font-bold'>
                 Total Carbon Footprint
             </p>
             <div className="text-2xl font-black text-primary-dark dark:text-primary-white">
-                0.00 <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub>2</sub></span>
+                0.00 <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub className='text-primary-green'>2</sub></span>
             </div>
         </div>
 
