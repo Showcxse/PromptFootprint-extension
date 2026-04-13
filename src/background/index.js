@@ -2,7 +2,7 @@ import { encodingForModel } from "js-tiktoken";
 import { MODEL_CONFIG } from "../utils/config";
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "CALCULATE_FOOTPRINT") {
+  if (request.type === "CALCULATE_FOOTPRINT") {
     console.log("Received Prompt For: ", request.model);
 
     (async () => {
@@ -39,6 +39,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const userTotal = storedData.totalEmissions || 0;
         await chrome.storage.local.set({
           totalEmissions: userTotal + newEmissions,
+          latestEmissions: newEmissions
         });
 
         console.log(

@@ -1,6 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Popup = () => {
+
+    const [totalEmissions, setTotalEmissions] = useState(0);
+    const [latestEmissions, setLatestEmissions] = useState(0);
+
+    useEffect(() => {
+        //get stuff from chrome storage
+        chrome.storage.local.get(['totalEmissions', 'latestEmissions'], (results) => {
+            if (results.totalEmissions) setTotalEmissions(results.totalEmissions);
+            if (results.latestEmissions) setLatestEmissions(results.latestEmissions);
+        });
+
+        //update ui when stuff actually happens
+        const storageListener = (changes, namespace) => {
+            if (namespace === 'local') {
+                if (changes.totalEmissions) setTotalEmissions(changes.totalEmissions.newValue);
+                if (changes.latestEmissions) setLatestEmissions(changes.latestEmissions.newValue);
+            }
+        };
+        chrome.storage.onChanged.addListener(storageListener);
+
+        return () => chrome.storage.onChanged.removeListener(storageListener);
+    }, []);
+
   return (
     <>
     <div className='min-h-100 bg-primary-white dark:bg-primary-dark p-6 flex flex-col justify-between border border-primary-dark/10 dark:border-white/10'>
@@ -28,14 +51,14 @@ const Popup = () => {
                 Latest Prompt Impact
             </p>
             <div className="text-2xl font-black text-primary-dark dark:text-primary-white">
-                0.00 <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub className='text-primary-green'>2</sub></span>
+                { latestEmissions > 0 ? latestEmissions.toFixed(4) : "0.00" } <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub className='text-primary-green'>2</sub></span>
             </div>
             <hr className='text-primary-dark dark:text-primary-white' />
             <p className='text-sm text-primary-dark dark:text-primary-white uppercase tracking-widest font-bold'>
                 Total Carbon Footprint
             </p>
             <div className="text-2xl font-black text-primary-dark dark:text-primary-white">
-                0.00 <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub className='text-primary-green'>2</sub></span>
+                { totalEmissions > 0 ? totalEmissions.toFixed(4) : "0.00" } <span className='text-lg text-transparent bg-clip-text bg-linear-to-r from-primary-green to-emerald-500'>gCO<sub className='text-primary-green'>2</sub></span>
             </div>
         </div>
 

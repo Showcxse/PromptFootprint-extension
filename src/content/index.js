@@ -17,6 +17,7 @@ const handlePromptSubmit = (event) => {
   const promptText = siteConfig.getPrompt(currentPromptInput);
 
   if (promptText && promptText.trim().length > 0) {
+    console.log("PromptFootprint: Sending message to background engine...");
     chrome.runtime.sendMessage(
       {
         //send to background
@@ -34,6 +35,8 @@ const handlePromptSubmit = (event) => {
         //remember to update popup later
       },
     );
+  } else {
+    console.log("PromptFootprint: Aborted. Empty text box");
   }
 };
 
@@ -47,7 +50,7 @@ const initListener = () => {
   if (promptInput && promptInput !== currentPromptInput) {
     //remove listener if it's not pointing to the right one
     if (currentPromptInput) {
-      currentPromptInput.removeEventLisenter("keydown", handlePromptSubmit);
+      currentPromptInput.removeEventListener("keydown", handlePromptSubmit); //how can I not spell 'listener'
     }
 
     currentPromptInput = promptInput;

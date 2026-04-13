@@ -1,18 +1,18 @@
 export const SITE_CONFIG = {
     'chatgpt.com': {
-        promptSelector: '#prompt-textarea > p',
+        promptSelector: '#prompt-textarea',
         getPrompt: (element) => element.innerText,
         model: 'GPT-4o',
 
     },
     'claude.ai': {
-        promptSelector: 'div[contenteditable="true"] > p',
+        promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         model: 'Claude 4.6 Opus',
 
     },
     'gemini.google.com': {
-        promptSelector: 'div[contenteditable="true"] > p',
+        promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         model: 'Gemini 3 Pro'
     },
@@ -22,7 +22,7 @@ export const SITE_CONFIG = {
         model: 'DeepSeek V3'
     },
     'grok.com': {
-        promptSelector: 'div[contenteditable="true"] > p',
+        promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         model: 'Grok 4.1'
     },
