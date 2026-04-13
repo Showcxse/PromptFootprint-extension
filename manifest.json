@@ -17,7 +17,7 @@
                 "https://gemini.google.com/*",
                 "https://chat.deepseek.com/*",
                 "https://grok.com/*",
-                "https://www.meta.ai/*"
+                "https://meta.ai/*"
             ],
             "js": ["src/content/index.js"]
         }

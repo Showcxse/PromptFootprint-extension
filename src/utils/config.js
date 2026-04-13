@@ -10,7 +10,7 @@ export const SITE_CONFIG = {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Send message"]',
-        model: 'Claude 4.6 Opus',
+        model: 'Claudecall 4.6 Opus',
 
     },
     'gemini.google.com': {
@@ -32,8 +32,8 @@ export const SITE_CONFIG = {
         model: 'Grok 4.1'
     },
     'meta.ai': {
-        promptSelector: 'input[placeholder="Ask Meta AI..."]',
-        getPrompt: (element) => element.value,
+        promptSelector: 'div[contenteditable="true"]',
+        getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Send"]',
         model: 'Llama 4'
     }

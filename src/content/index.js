@@ -32,6 +32,7 @@ const handlePromptSubmit = (event) => {
         }
         console.log("PromptFootprint: Calculation Received", response);
         //remember to update popup later
+        
       },
     );
   } else {

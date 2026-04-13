@@ -1,5 +1,7 @@
 import { encodingForModel } from "js-tiktoken";
 import { MODEL_CONFIG } from "../utils/config";
+import { updateGlobalFootprint } from "../utils/firebase";
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "CALCULATE_FOOTPRINT") {
@@ -45,6 +47,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log(
           `PromptFootprint: Added ${newEmissions}g CO2. New Total: ${userTotal}`,
         );
+        updateGlobalFootprint(newEmissions);
 
         sendResponse({ success: true, emissionsAdded: newEmissions });
       } catch (error) {
