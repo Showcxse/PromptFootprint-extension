@@ -2,33 +2,39 @@ export const SITE_CONFIG = {
     'chatgpt.com': {
         promptSelector: '#prompt-textarea',
         getPrompt: (element) => element.innerText,
+        sendButtonSelector: 'button[data-testid="send-button"]',
         model: 'GPT-4o',
 
     },
     'claude.ai': {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
+        sendButtonSelector: 'button[aria-label="Send message"]',
         model: 'Claude 4.6 Opus',
 
     },
     'gemini.google.com': {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
+        sendButtonSelector: 'button[aria-label="Send message"]',
         model: 'Gemini 3 Pro'
     },
     'chat.deepseek.com': {
         promptSelector: 'textarea[placeholder="Message DeepSeek"]',
         getPrompt: (element) => element.value,
+        sendButtonSelector: '._52c986b',
         model: 'DeepSeek V3'
     },
     'grok.com': {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
+        sendButtonSelector: 'button[aria-label="Submit"]',
         model: 'Grok 4.1'
     },
     'meta.ai': {
         promptSelector: 'input[placeholder="Ask Meta AI..."]',
         getPrompt: (element) => element.value,
+        sendButtonSelector: 'button[aria-label="Send"]',
         model: 'Llama 4'
     }
 };

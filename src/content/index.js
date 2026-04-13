@@ -4,7 +4,6 @@ import { SITE_CONFIG } from "../utils/config";
 let currentPromptInput = null;
 
 const handlePromptSubmit = (event) => {
-  //dont do shit if input is anything except send
   if (event.type === "keydown" && (event.key !== "Enter" || event.shiftKey)) {
     return;
   }
@@ -59,6 +58,18 @@ const initListener = () => {
     console.log("PromptFootprint: Succesfully attached to ", hostname);
   }
 };
+
+document.body.addEventListener("click", (event) => {
+  const hostname = window.location.hostname;
+  const siteConfig = SITE_CONFIG[hostname];
+  if (!siteConfig || !siteConfig.sendButtonSelector) return; 
+
+  const likelySendButton = event.target.closest(siteConfig.sendButtonSelector);
+
+  if (likelySendButton) {
+    handlePromptSubmit(event);
+  }
+}, { capture: true });
 
 const observer = new MutationObserver(() => {
     initListener();
