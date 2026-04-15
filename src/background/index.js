@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log(
           `PromptFootprint: Added ${newEmissions}g CO2. New Total: ${userTotal}`,
         );
-        updateGlobalFootprint(newEmissions);
+        updateGlobalFootprint(newEmissions, tokens);
 
         sendResponse({ success: true, emissionsAdded: newEmissions });
       } catch (error) {

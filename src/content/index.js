@@ -1,17 +1,23 @@
 //Get prompt editable div / textarea content
 import { SITE_CONFIG } from "../utils/config";
 
+const hostname = window.location.hostname;
+const siteConfig = SITE_CONFIG[hostname];
+
+
 let currentPromptInput = null;
+let responseTimer = null;
+let lastSnipedText = "";
+
+if (!siteConfig) {
+  console.log("PromptFootprint: Site not supported, going to sleep.");
+}
+
 
 const handlePromptSubmit = (event) => {
   if (event.type === "keydown" && (event.key !== "Enter" || event.shiftKey)) {
     return;
   }
-
-  const hostname = window.location.hostname;
-  const siteConfig = SITE_CONFIG[hostname];
-
-  if (!siteConfig) return;
 
   const promptText = siteConfig.getPrompt(currentPromptInput);
 
@@ -19,7 +25,6 @@ const handlePromptSubmit = (event) => {
     console.log("PromptFootprint: Sending message to background engine...");
     chrome.runtime.sendMessage(
       {
-        //send to background
         type: "CALCULATE_FOOTPRINT",
         promptText,
         model: siteConfig.model,
@@ -31,7 +36,6 @@ const handlePromptSubmit = (event) => {
           return;
         }
         console.log("PromptFootprint: Calculation Received", response);
-        //remember to update popup later
         
       },
     );
@@ -40,17 +44,13 @@ const handlePromptSubmit = (event) => {
   }
 };
 
-const initListener = () => {
-  const hostname = window.location.hostname;
-  const siteConfig = SITE_CONFIG[hostname];
-  if (!siteConfig) return;
-
+const initInputObserver = () => {
   const promptInput = document.querySelector(siteConfig.promptSelector);
 
   if (promptInput && promptInput !== currentPromptInput) {
     //remove listener if it's not pointing to the right one
     if (currentPromptInput) {
-      currentPromptInput.removeEventListener("keydown", handlePromptSubmit); //how can I not spell 'listener'
+      currentPromptInput.removeEventListener("keydown", handlePromptSubmit); 
     }
 
     currentPromptInput = promptInput;
@@ -60,10 +60,29 @@ const initListener = () => {
   }
 };
 
-document.body.addEventListener("click", (event) => {
-  const hostname = window.location.hostname;
-  const siteConfig = SITE_CONFIG[hostname];
-  if (!siteConfig || !siteConfig.sendButtonSelector) return; 
+const snipeOutput = () => {
+  const responses = document.querySelectorAll(siteConfig.responseSelector); //grab all of them in case there is multiple on screen 
+  if (responses.length === 0) return;
+
+  const latestResponse = responses[responses.length -1];
+  const responseText = latestResponse.innerText;
+
+
+  if (responseText === lastSnipedText || responseText.trim().length === 0) return;
+  lastSnipedText = responseText;
+
+  console.log("PromptFootprint: Thinks AI is done talking. Output length: ", responseText.length);
+
+
+  chrome.runtime.sendMessage({
+    type: "CALCULATE_OUTPUT_FOOTPRINT",
+    responseText,
+    model: siteConfig.model,
+  });
+};
+
+document.body.addEventListener("click", (event) => { //so it also works when you click the button
+  if (!siteConfig.sendButtonSelector) return; 
 
   const likelySendButton = event.target.closest(siteConfig.sendButtonSelector);
 
@@ -73,9 +92,20 @@ document.body.addEventListener("click", (event) => {
 }, { capture: true });
 
 const observer = new MutationObserver(() => {
-    initListener();
+    initInputObserver();
+
+
+    if (siteConfig.responseSelector) { //debouncer
+      clearTimeout(responseTimer);
+
+      responseTimer = setTimeout(() => {
+        snipeOutput();
+      }, 3000); 
+    }
 });
+if (siteConfig) {
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true});
+  initInputObserver();
+}
 
-observer.observe(document.body, { childList: true, subtree: true});
 
-initListener() //testing

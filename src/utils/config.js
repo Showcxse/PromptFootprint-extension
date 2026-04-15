@@ -3,6 +3,7 @@ export const SITE_CONFIG = {
         promptSelector: '#prompt-textarea',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[data-testid="send-button"]',
+        responseSelector: 'div[data-message-author-role="assistant"]',
         model: 'GPT-4o',
 
     },
@@ -10,31 +11,35 @@ export const SITE_CONFIG = {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Send message"]',
-        model: 'Claudecall 4.6 Opus',
-
+        responseSelector: '.font-claude-response',
+        model: 'Claude 4.6 Opus',
     },
     'gemini.google.com': {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Send message"]',
+        responseSelector: '.model-response-text',
         model: 'Gemini 3 Pro'
     },
     'chat.deepseek.com': {
         promptSelector: 'textarea[placeholder="Message DeepSeek"]',
         getPrompt: (element) => element.value,
-        sendButtonSelector: '._52c986b',
+        sendButtonSelector: '._52c986b', //may need a better anchor than this. I think this is from a shadow DOM
+        responseSelector: '.ds-markdown', 
         model: 'DeepSeek V3'
     },
     'grok.com': {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Submit"]',
+        responseSelector: 'div[id^="response-"]', //transparent my fucking ass elon ts was not easy to identify
         model: 'Grok 4.1'
     },
     'meta.ai': {
         promptSelector: 'div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Send"]',
+        responseSelector: 'div[data-testid="assistant-message"]',
         model: 'Llama 4'
     }
 };

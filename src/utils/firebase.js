@@ -14,12 +14,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export const updateGlobalFootprint = async (emissionsToAdd) => {
+export const updateGlobalFootprint = async (emissionsToAdd, tokensToAdd) => {
     try {
         const globalRef = doc(db, "stats", "global");
-
+        const equivalentMilesToAdd = (emissionsToAdd / 400).toFixed(6);
         await updateDoc(globalRef, {
-            totalEmissions: increment(emissionsToAdd)
+            totalEmissions: increment(emissionsToAdd),
+            totalCalculations: increment(1),
+            totalTokens: increment(tokensToAdd),
+            totalMilesDriven: increment(equivalentMilesToAdd)
+
+
         });
         console.log(`PromptFootprint: Added ${emissionsToAdd} to cumulative total!`)
     } catch (error) {
