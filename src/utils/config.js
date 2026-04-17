@@ -8,14 +8,14 @@ export const SITE_CONFIG = {
 
     },
     'claude.ai': {
-        promptSelector: 'div[contenteditable="true"]',
-        getPrompt: (element) => element.innerText,
+        promptSelector: 'div.ProseMirror',
+        getPrompt: (element) => element.textContent || element.innerText || "",
         sendButtonSelector: 'button[aria-label="Send message"]',
         responseSelector: '.font-claude-response',
         model: 'Claude 4.6 Opus',
     },
     'gemini.google.com': {
-        promptSelector: 'div[contenteditable="true"]',
+        promptSelector: 'div[contenteditable="true"][role="textbox"], rich-textarea div[contenteditable="true"]',
         getPrompt: (element) => element.innerText,
         sendButtonSelector: 'button[aria-label="Send message"]',
         responseSelector: '.model-response-text',
@@ -37,7 +37,7 @@ export const SITE_CONFIG = {
     },
     'meta.ai': {
         promptSelector: 'div[contenteditable="true"]',
-        getPrompt: (element) => element.innerText,
+        getPrompt: (element) => element.innerText || "", 
         sendButtonSelector: 'button[aria-label="Send"]',
         responseSelector: 'div[data-testid="assistant-message"]',
         model: 'Llama 4'
