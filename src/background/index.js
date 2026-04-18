@@ -14,16 +14,11 @@ async function processCarbonCalculation(text, model, isOutput) {
     currentGridIntensity = activeModel.fallbackIntensity;
   } else {
     const response = await fetch(
-      `https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${activeModel.likelyZone}`,
-      {
-        headers: {
-          "auth-token": import.meta.env.VITE_ELECTRICITY_MAPS_API_KEY,
-        },
-      },
+      `https://promptfootprint.vercel.app/api/get-grid-intensity?zone=${activeModel.likelyZone}`
     );
 
     if (!response.ok)
-      throw new Error("Error establishing link to Electricity Maps API");
+      throw new Error("Error establishing link to PromptFootprint API Bridge");
 
     const gridData = await response.json();
     currentGridIntensity = gridData.carbonIntensity;
@@ -36,17 +31,34 @@ async function processCarbonCalculation(text, model, isOutput) {
   const storedData = await chrome.storage.local.get([
     "totalEmissions",
     "latestEmissions",
+    "latestInputEmissions", //adding these last two so there is more transparency on what causes what
+    "latestOutputEmissions",
   ]);
   const userTotal = storedData.totalEmissions || 0;
-
   const currentLatestEmissions = storedData.latestEmissions || 0;
+
+  let newLatestEmissions, newLatestInput, newLatestOutput;
+
+  if (isOutput) {
+    newLatestEmissions = currentLatestEmissions + newEmissions;
+    newLatestInput = storedData.latestInputEmissions || 0;
+    newLatestOutput = newEmissions;
+  } else {
+    newLatestEmissions = newEmissions;
+    newLatestInput = newEmissions;
+    newLatestOutput = 0;
+  }
+
+  /*
   const latesterEmissions = isOutput
     ? currentLatestEmissions + newEmissions
     : newEmissions;
-
+  */
   await chrome.storage.local.set({
     totalEmissions: userTotal + newEmissions,
-    latestEmissions: latesterEmissions,
+    latestEmissions: newLatestEmissions,
+    latestInputEmissions: newLatestInput,
+    latestOutputEmissions: newLatestOutput,
   });
 
   updateGlobalFootprint(newEmissions, tokens);
